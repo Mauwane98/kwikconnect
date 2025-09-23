@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kwik Connect - Local Delivery</title>
+    <meta name="description" content="Kwik Connect - Your local marketplace for groceries, food, essentials, and more. Delivered kwikly.">
+    <link href="../styles/tailwind.css" rel="stylesheet">
+    <style>
+        /* A little custom CSS for the hero background image */
+        .hero-bg {
+            background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="bg-white font-sans">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-20">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <a href="customer_dashboard.html" class="text-2xl font-bold text-gray-800">Kwik Connect</a>
+                </div>
+                <!-- Profile / Sign In -->
+                <div class="flex items-center">
+                    <button id="profile-button" class="bg-gray-800 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-700 transition-colors">
+                        Sign In
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-bg">
+        <div class="bg-black bg-opacity-50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 lg:py-40">
+                <div class="max-w-2xl">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
+                        Order from local stores to your door
+                    </h1>
+                    <p class="mt-4 text-lg text-gray-200">
+                        Groceries, food, essentials, and more. Delivered kwikly.
+                    </p>
+                    <div class="mt-8 flex flex-col sm:flex-row gap-2">
+                        <input 
+                            type="text" 
+                            id="address-input"
+                            class="w-full sm:flex-grow bg-white border border-transparent rounded-md py-3 px-4 text-base placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                            placeholder="Enter delivery address"
+                        >
+                        <button class="bg-gray-800 text-white px-6 py-3 rounded-md font-semibold hover:bg-gray-700 transition-colors">
+                            Find Stores
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        <!-- Horizontally Scrolling Categories -->
+        <section class="mb-16">
+            <div id="categories-container" class="flex space-x-4 overflow-x-auto pb-4 -mx-4 px-4">
+                <!-- Placeholder Categories (to be populated by JS) -->
+                <div class="flex flex-col items-center space-y-2 flex-shrink-0 text-center cursor-pointer animate-pulse">
+                    <div class="h-24 w-24 bg-gray-200 rounded-lg"></div>
+                    <div class="h-4 bg-gray-200 rounded w-20"></div>
+                </div>
+                <div class="flex flex-col items-center space-y-2 flex-shrink-0 text-center cursor-pointer animate-pulse">
+                    <div class="h-24 w-24 bg-gray-200 rounded-lg"></div>
+                    <div class="h-4 bg-gray-200 rounded w-16"></div>
+                </div>
+                <div class="flex flex-col items-center space-y-2 flex-shrink-0 text-center cursor-pointer animate-pulse">
+                    <div class="h-24 w-24 bg-gray-200 rounded-lg"></div>
+                    <div class="h-4 bg-gray-200 rounded w-24"></div>
+                </div>
+                 <div class="flex flex-col items-center space-y-2 flex-shrink-0 text-center cursor-pointer animate-pulse">
+                    <div class="h-24 w-24 bg-gray-200 rounded-lg"></div>
+                    <div class="h-4 bg-gray-200 rounded w-20"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vendor Grid -->
+        <section>
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">Featured Local Vendors</h2>
+            <div id="vendors-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <!-- Placeholder Vendor Card (to be populated by JS) -->
+                <div class="bg-gray-100 rounded-lg animate-pulse">
+                    <div class="w-full h-40 bg-gray-200 rounded-t-lg"></div>
+                    <div class="p-4">
+                        <div class="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+                        <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Partner Sign-up Section -->
+    <section class="bg-gray-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Vendor Sign-up Card -->
+                <div class="bg-white rounded-lg shadow-lg p-8 flex items-center">
+                    <img src="https://via.placeholder.com/150" alt="Storefront" class="w-24 h-24 md:w-32 md:h-32 rounded-lg object-cover mr-6">
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900">Become a Vendor</h3>
+                        <p class="mt-2 text-gray-600">Grow your business and reach new customers by joining our platform.</p>
+                        <a href="../pages/become-vendor.html" class="mt-4 inline-block text-gray-800 font-semibold hover:text-black">Add your store &rarr;</a>
+                    </div>
+                </div>
+                <!-- Courier Sign-up Card -->
+                <div class="bg-white rounded-lg shadow-lg p-8 flex items-center">
+                    <img src="https://via.placeholder.com/150" alt="Delivery person" class="w-24 h-24 md:w-32 md:h-32 rounded-lg object-cover mr-6">
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900">Become a Courier</h3>
+                        <p class="mt-2 text-gray-600">Earn money on your own schedule with flexible delivery opportunities.</p>
+                        <a href="../pages/become-courier.html" class="mt-4 inline-block text-gray-800 font-semibold hover:text-black">Sign up to deliver &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <!-- Column 1 -->
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Kwik Connect</h4>
+                    <ul>
+                        <li class="mb-2"><a href="../pages/about-us.html" class="text-gray-400 hover:text-white">About Us</a></li>
+                        <li class="mb-2"><a href="../pages/careers.html" class="text-gray-400 hover:text-white">Careers</a></li>
+                        <li class="mb-2"><a href="../pages/blog.html" class="text-gray-400 hover:text-white">Blog</a></li>
+                    </ul>
+                </div>
+                <!-- Column 2 -->
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Get Help</h4>
+                    <ul>
+                        <li class="mb-2"><a href="../pages/contact-us.html" class="text-gray-400 hover:text-white">Contact Us</a></li>
+                        <li class="mb-2"><a href="../pages/faqs.html" class="text-gray-400 hover:text-white">FAQs</a></li>
+                        <li class="mb-2"><a href="../pages/view-all-cities.html" class="text-gray-400 hover:text-white">View all cities</a></li>
+                    </ul>
+                </div>
+                <!-- Column 3 -->
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Partners</h4>
+                    <ul>
+                        <li class="mb-2"><a href="../pages/for-vendors.html" class="text-gray-400 hover:text-white">For Vendors</a></li>
+                        <li class="mb-2"><a href="../pages/for-couriers.html" class="text-gray-400 hover:text-white">For Couriers</a></li>
+                        <li class="mb-2"><a href="../pages/community-managers.html" class="text-gray-400 hover:text-white">Community Managers</a></li>
+                    </ul>
+                </div>
+                <!-- Column 4 (App Icons) -->
+                <div>
+                     <h4 class="font-bold text-lg mb-4">Our App</h4>
+                     <!-- Placeholder for App Store / Google Play buttons -->
+                     <a href="../pages/app-store.html" class="block mb-3"><img src="https://via.placeholder.com/120x40?text=App+Store" alt="App Store"></a>
+                     <a href="../pages/google-play.html" class="block"><img src="https://via.placeholder.com/120x40?text=Google+Play" alt="Google Play"></a>
+                </div>
+            </div>
+            <div class="mt-12 border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
+                <p>&copy; 2024 Kwik Connect. All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="../pages/privacy-policy.html" class="hover:text-white">Privacy Policy</a>
+                    <a href="../pages/terms-of-service.html" class="hover:text-white">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- TEMPLATES for JavaScript -->
+    
+    <!-- Category Card Template -->
+    <template id="category-card-template">
+        <div class="flex flex-col items-center space-y-2 flex-shrink-0 text-center cursor-pointer group card-hover-effect">
+            <img src="https://via.placeholder.com/150" alt="Category" class="h-24 w-24 object-cover rounded-lg transition-shadow hover-grow" data-category-image>
+            <span class="text-base font-semibold text-gray-800" data-category-name>Category</span>
+        </div>
+    </template>
+
+    <!-- Vendor Card Template -->
+    <template id="vendor-card-template">
+        <div class="bg-white rounded-lg overflow-hidden cursor-pointer group card-hover-effect">
+            <a href="#" class="block">
+                <div class="relative">
+                    <img class="w-full h-40 object-cover hover-grow" src="https://via.placeholder.com/400x250" alt="Vendor image" data-vendor-image>
+                </div>
+                <div class="p-4">
+                    <h3 class="text-lg font-bold text-gray-900 truncate" data-vendor-name>Store Name</h3>
+                    <p class="text-sm text-gray-600 mt-1" data-vendor-description>Brief description of the store...</p>
+                </div>
+            </a>
+        </div>
+    </template>
+
+    <script src="../scripts/customer.js"></script>
+</body>
+</html>

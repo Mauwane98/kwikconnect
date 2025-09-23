@@ -1,0 +1,34 @@
+# docker-compose.yml
+
+version: '3.8'
+
+services:
+  # Web Service (Flask App)
+  web:
+    build: .
+    container_name: kwik_connect_web
+    command: gunicorn --bind 0.0.0.0:5000 run:app
+    volumes:
+      - .:/home/app
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+  # Database Service (PostgreSQL)
+  db:
+    image: postgres:13
+    container_name: kwik_connect_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:

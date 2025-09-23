@@ -1,0 +1,57 @@
+/*
+  Kwik Connect - Custom Styles
+  This file is for custom CSS rules that extend or override Tailwind CSS.
+  It should be used for project-specific components, utilities, or global styles
+  that are not easily managed through Tailwind's utility-first approach.
+*/
+
+/* Basic reset for consistent box model */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Custom hover effect for cards */
+.card-hover-effect {
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.card-hover-effect:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Basic responsive image styling */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block; /* Removes extra space below image */
+}
+
+/* Smooth transition for images on hover (e.g., for product images) */
+.hover-grow {
+  transition: transform 0.3s ease-in-out;
+}
+
+.hover-grow:hover {
+  transform: scale(1.05);
+}
+
+/* Custom scrollbar for horizontally scrolling elements */
+.overflow-x-auto::-webkit-scrollbar {
+  height: 8px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

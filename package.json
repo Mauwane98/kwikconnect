@@ -1,0 +1,15 @@
+{
+  "name": "kwik_connect",
+  "version": "1.0.0",
+  "description": "A marketplace platform for school uniforms and supplies.",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "tailwindcss -i ./frontend/styles/input.css -o ./frontend/styles/tailwind.css --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tailwindcss": "^3.0.0"
+  }
+}
