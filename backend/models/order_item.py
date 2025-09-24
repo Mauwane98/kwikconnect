@@ -1,8 +1,9 @@
 # backend/models/order_item.py
 
 from .. import db
+from .base_model import BaseModel # Import BaseModel
 
-class OrderItem(db.Model):
+class OrderItem(db.Model, BaseModel): # Inherit from BaseModel
     __tablename__ = 'order_items'
 
     id = db.Column(db.Integer, primary_key=True)

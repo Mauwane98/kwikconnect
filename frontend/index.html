@@ -9,16 +9,8 @@
     <meta name="theme-color" content="#111827">
 </head>
 <body>
-    <!-- This is the main container where dashboards will be dynamically loaded -->
-    <div id="app-root">
-        <!-- The content of customer_dashboard.html, vendor_dashboard.html, etc., will be injected here by main.js -->
-        <!-- Initially, we can show a loading spinner -->
-        <div class="flex items-center justify-center h-screen">
-            <div class="text-xl font-semibold">Loading Kwik Connect...</div>
-        </div>
-    </div>
-
-    <!-- Main script to handle routing and PWA registration -->
+    <div id="root"></div>
+    <script type="module" src="/frontend-react/src/index.js"></script>
     <script src="scripts/main.js"></script>
 </body>
 </html>

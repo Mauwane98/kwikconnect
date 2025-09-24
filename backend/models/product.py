@@ -2,8 +2,9 @@
 
 from .. import db
 from datetime import datetime
+from .base_model import BaseModel # Import BaseModel
 
-class Product(db.Model):
+class Product(db.Model, BaseModel): # Inherit from BaseModel
     __tablename__ = 'products'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -18,6 +19,7 @@ class Product(db.Model):
 
     # Relationships
     vendor = db.relationship('Vendor', back_populates='products')
+    order_items = db.relationship('OrderItem', back_populates='product', lazy='dynamic')
 
     def __repr__(self):
         return f'<Product {self.name}>'

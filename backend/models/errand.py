@@ -3,6 +3,7 @@
 from .. import db
 import enum
 from datetime import datetime
+from .base_model import BaseModel # Import BaseModel
 
 class ErrandStatus(enum.Enum):
     PENDING = 'pending'
@@ -11,7 +12,7 @@ class ErrandStatus(enum.Enum):
     COMPLETED = 'completed'
     CANCELLED = 'cancelled'
 
-class Errand(db.Model):
+class Errand(db.Model, BaseModel): # Inherit from BaseModel
     __tablename__ = 'errands'
 
     id = db.Column(db.Integer, primary_key=True)

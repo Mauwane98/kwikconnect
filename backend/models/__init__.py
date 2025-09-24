@@ -9,6 +9,8 @@ from .order_item import OrderItem
 from .errand import Errand, ErrandStatus
 from .wallet import Wallet
 from .transaction import Transaction, TransactionType, TransactionStatus
+from .token_blocklist import TokenBlocklist
+from .base_model import BaseModel # Import BaseModel
 
 # You can optionally define a __all__ to control `from .models import *`
 __all__ = [
@@ -20,5 +22,7 @@ __all__ = [
     'OrderItem',
     'Errand', 'ErrandStatus',
     'Wallet',
-    'Transaction', 'TransactionType', 'TransactionStatus'
+    'Transaction', 'TransactionType', 'TransactionStatus',
+    'TokenBlocklist',
+    'BaseModel' # Add BaseModel to __all__
 ]

@@ -3,6 +3,7 @@
 from .. import db
 import enum
 from datetime import datetime
+from .base_model import BaseModel # Import BaseModel
 
 class OrderStatus(enum.Enum):
     PENDING = 'pending'
@@ -13,7 +14,7 @@ class OrderStatus(enum.Enum):
     DELIVERED = 'delivered'
     CANCELLED = 'cancelled'
 
-class Order(db.Model):
+class Order(db.Model, BaseModel): # Inherit from BaseModel
     __tablename__ = 'orders'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -32,8 +33,8 @@ class Order(db.Model):
 
     # Relationships
     customer = db.relationship('User', back_populates='orders', foreign_keys=[customer_id])
-    vendor = db.relationship('Vendor', back_populates='orders')
-    courier = db.relationship('Courier', back_populates='orders')
+    vendor = db.relationship('Vendor', back_populates='orders', foreign_keys=[vendor_id])
+    courier = db.relationship('Courier', back_populates='orders', foreign_keys=[courier_id])
     items = db.relationship('OrderItem', back_populates='order', cascade="all, delete-orphan")
 
     def __repr__(self):
