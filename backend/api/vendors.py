@@ -16,7 +16,25 @@ vendors_bp = Blueprint('vendors_api', __name__, url_prefix='/api/v1/vendors')
 @vendors_bp.route('/', methods=['GET'])
 def list_vendors():
     """Returns a list of all approved vendors."""
+    # Read supported filters from query params
+    q = request.args.get('query')
+    category = request.args.get('category')
+    delivery_time = request.args.get('delivery_time')
+
+    if q or category or delivery_time:
+        filters = {}
+        if q:
+            filters['query'] = q
+        if category:
+            filters['category'] = category
+        if delivery_time:
+            filters['delivery_time'] = delivery_time
+
+        vendors = VendorService.search_vendors(filters)
+        return jsonify(vendors), 200
+
     vendors = VendorService.get_all_vendors()
+    # VendorService.get_all_vendors returns raw vendor dicts; ensure schema compatibility when possible
     return jsonify(VendorSchema(many=True).dump(vendors)), 200
 
 @vendors_bp.route('/<int:vendor_id>/products', methods=['GET'])

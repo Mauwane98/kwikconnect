@@ -7,7 +7,7 @@ based on the JWT token.
 from functools import wraps
 from flask import jsonify, request, current_app
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from backend.models.user import User, UserRole
+from backend.models.user import User
 from backend.models.vendor import Vendor
 from backend.models.product import Product
 from backend.errors import UnauthorizedError, ForbiddenError, NotFoundError
@@ -44,18 +44,18 @@ def vendor_owner_required(fn):
         user_id = get_jwt_identity()
         user = User.find_by_id(user_id)
 
-        if not user or user.role != UserRole.VENDOR:
+        if not user or user.role != 'vendor':
             raise ForbiddenError("Access denied: Vendor privileges required.")
 
-        vendor = Vendor.query.filter_by(user_id=user.id).first()
+        vendor = Vendor.find_by_user_id(str(user._id)) # Use user._id as string
         if not vendor:
             raise NotFoundError("Vendor profile not found.")
 
         # Check for product ownership if product_id is in kwargs
         product_id = kwargs.get('product_id')
         if product_id:
-            product = Product.query.get(product_id)
-            if not product or product.vendor_id != vendor.id:
+            product = Product.find_by_id(product_id)
+            if not product or product.vendor_id != str(vendor._id): # Compare with string representation of vendor._id
                 raise ForbiddenError("Unauthorized: Product does not belong to this vendor.")
 
         return fn(user, vendor, *args, **kwargs)
@@ -63,13 +63,13 @@ def vendor_owner_required(fn):
 
 # Specific role decorators
 def admin_required(fn):
-    return role_required(UserRole.ADMIN)(fn)
+    return role_required('admin')(fn)
 
 def vendor_required(fn):
-    return role_required(UserRole.VENDOR)(fn)
+    return role_required('vendor')(fn)
 
 def courier_required(fn):
-    return role_required(UserRole.COURIER)(fn)
+    return role_required('courier')(fn)
 
 def customer_required(fn):
-    return role_required(UserRole.CUSTOMER)(fn)
+    return role_required('customer')(fn)

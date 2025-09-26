@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Sidebar: React.FC = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   const getDashboardLink = () => {
     if (!user) return '/';
@@ -22,14 +22,14 @@ const Sidebar: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col w-64 bg-gray-800">
-      <div className="flex items-center justify-center h-16 bg-gray-900">
+    <div className="flex flex-col w-64 bg-neutral-800">
+      <div className="flex items-center justify-center h-16 bg-neutral-900">
         <span className="text-white font-bold uppercase">Kwik Connect</span>
       </div>
       <nav className="flex-1 flex flex-col p-4">
         <Link
           to={getDashboardLink()}
-          className="flex items-center text-gray-400 hover:text-white py-2 px-4 rounded transition duration-200"
+          className="flex items-center text-neutral-400 hover:text-primary-light py-2 px-4 rounded transition duration-200"
         >
           <svg
             className="h-5 w-5 mr-3"
@@ -51,7 +51,7 @@ const Sidebar: React.FC = () => {
         {user && user.role === 'customer' && (
           <Link
             to="/customer/orders"
-            className="flex items-center text-gray-400 hover:text-white py-2 px-4 rounded transition duration-200"
+            className="flex items-center text-neutral-400 hover:text-primary-light py-2 px-4 rounded transition duration-200"
           >
             <svg
               className="h-5 w-5 mr-3"
@@ -74,7 +74,7 @@ const Sidebar: React.FC = () => {
         {user && user.role === 'vendor' && (
           <Link
             to="/vendor/products"
-            className="flex items-center text-gray-400 hover:text-white py-2 px-4 rounded transition duration-200"
+            className="flex items-center text-neutral-400 hover:text-primary-light py-2 px-4 rounded transition duration-200"
           >
             <svg
               className="h-5 w-5 mr-3"
@@ -97,7 +97,7 @@ const Sidebar: React.FC = () => {
         {user && user.role === 'courier' && (
           <Link
             to="/courier/jobs"
-            className="flex items-center text-gray-400 hover:text-white py-2 px-4 rounded transition duration-200"
+            className="flex items-center text-neutral-400 hover:text-primary-light py-2 px-4 rounded transition duration-200"
           >
             <svg
               className="h-5 w-5 mr-3"
@@ -127,7 +127,7 @@ const Sidebar: React.FC = () => {
         {user && user.role === 'admin' && (
           <Link
             to="/admin/users"
-            className="flex items-center text-gray-400 hover:text-white py-2 px-4 rounded transition duration-200"
+            className="flex items-center text-neutral-400 hover:text-primary-light py-2 px-4 rounded transition duration-200"
           >
             <svg
               className="h-5 w-5 mr-3"
@@ -150,7 +150,7 @@ const Sidebar: React.FC = () => {
         {/* Common links for all authenticated users */}
         <Link
           to="/profile"
-          className="flex items-center text-gray-400 hover:text-white py-2 px-4 rounded transition duration-200"
+          className="flex items-center text-neutral-400 hover:text-primary-light py-2 px-4 rounded transition duration-200"
         >
           <svg
             className="h-5 w-5 mr-3"
@@ -171,7 +171,7 @@ const Sidebar: React.FC = () => {
 
         <button
           onClick={logout}
-          className="flex items-center text-gray-400 hover:text-white py-2 px-4 rounded transition duration-200 w-full text-left"
+          className="flex items-center text-neutral-400 hover:text-primary-light py-2 px-4 rounded transition duration-200 w-full text-left"
         >
           <svg
             className="h-5 w-5 mr-3"

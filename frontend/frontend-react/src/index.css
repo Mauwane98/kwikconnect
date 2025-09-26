@@ -1,3 +1,54 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Project utility overrides */
+.container {
+	@apply mx-auto px-4;
+}
+
+/* Responsive helpers */
+@screen sm {
+	.container { @apply px-6; }
+}
+
+@screen lg {
+	.container { @apply px-8; }
+}
+
+/* Ensure the root fills the viewport so min-h-full/min-h-screen works reliably */
+html, body, #root {
+	height: 100%;
+}
+
+/* Reusable project utilities */
+.kc-container {
+	@apply max-w-7xl mx-auto px-4;
+}
+
+/* Hero background inspired by UberEats-like gradient */
+.hero-gradient {
+	background: linear-gradient(120deg,#0ea5a4 0%, #10b981 45%, #059669 100%);
+}
+
+.fade-in {
+	animation: fadeIn 600ms ease both;
+}
+
+@keyframes fadeIn {
+	from { opacity: 0; transform: translateY(6px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+/* Card grid helper */
+.card-grid {
+	@apply gap-6;
+}
+
+/* CTA button small helper */
+.cta-btn {
+	@apply inline-flex items-center justify-center tracking-tight;
+}
+
+/* Make sure images don't overflow */
+img { max-width: 100%; }

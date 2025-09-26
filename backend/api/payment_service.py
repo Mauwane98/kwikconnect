@@ -1,13 +1,15 @@
 
-from backend import db
-from backend.models import Wallet, Transaction, TransactionType, User
+
+from backend.models.wallet import Wallet
+from backend.models.transaction import Transaction, TransactionType
+from backend.models.user import User
 from backend.errors import NotFoundError, BadRequestError, ForbiddenError, ConflictError
 from decimal import Decimal
 
 class PaymentService:
     @staticmethod
     def get_user_wallet(user_id):
-        wallet = Wallet.query.filter_by(user_id=user_id).first()
+        wallet = Wallet.find_by_user_id(user_id)
         if not wallet:
             raise NotFoundError("Wallet not found")
         return wallet
@@ -15,7 +17,9 @@ class PaymentService:
     @staticmethod
     def get_wallet_transactions(user_id):
         wallet = PaymentService.get_user_wallet(user_id)
-        transactions = Transaction.query.filter_by(wallet_id=wallet.id).order_by(Transaction.created_at.desc()).all()
+        transactions = Transaction.find_by_wallet_id(str(wallet._id))
+        # Sort transactions by created_at in descending order
+        transactions.sort(key=lambda x: x.created_at, reverse=True)
         return transactions
 
     @staticmethod
@@ -25,16 +29,15 @@ class PaymentService:
 
         wallet = PaymentService.get_user_wallet(user_id)
         wallet.balance += Decimal(str(amount))
-        
+        wallet.save() # Save updated wallet balance
+
         transaction = Transaction(
-            wallet_id=wallet.id,
+            wallet_id=str(wallet._id), # Store wallet's MongoDB _id
             amount=Decimal(str(amount)),
-            transaction_type=TransactionType.DEPOSIT,
+            transaction_type=TransactionType.DEPOSIT.value, # Store enum value
             description="User deposit"
         )
-        
-        db.session.add(transaction)
-        db.session.commit()
+        transaction.save() # Save new transaction
         return wallet, transaction
 
     @staticmethod
@@ -47,16 +50,15 @@ class PaymentService:
             raise ConflictError("Insufficient funds")
 
         wallet.balance -= Decimal(str(amount))
-        
+        wallet.save() # Save updated wallet balance
+
         transaction = Transaction(
-            wallet_id=wallet.id,
+            wallet_id=str(wallet._id), # Store wallet's MongoDB _id
             amount=Decimal(str(amount)),
-            transaction_type=TransactionType.WITHDRAWAL,
+            transaction_type=TransactionType.WITHDRAWAL.value, # Store enum value
             description="User withdrawal"
         )
-        
-        db.session.add(transaction)
-        db.session.commit()
+        transaction.save() # Save new transaction
         return wallet, transaction
 
     @staticmethod
@@ -72,20 +74,22 @@ class PaymentService:
 
         sender_wallet.balance -= Decimal(str(amount))
         receiver_wallet.balance += Decimal(str(amount))
+        sender_wallet.save() # Save updated sender wallet balance
+        receiver_wallet.save() # Save updated receiver wallet balance
 
         sender_transaction = Transaction(
-            wallet_id=sender_wallet.id,
+            wallet_id=str(sender_wallet._id), # Store wallet's MongoDB _id
             amount=Decimal(str(amount)),
-            transaction_type=TransactionType.TRANSFER,
+            transaction_type=TransactionType.PAYOUT.value, # Use PAYOUT for sender
             description=f"Transfer to user {receiver_id}"
         )
         receiver_transaction = Transaction(
-            wallet_id=receiver_wallet.id,
+            wallet_id=str(receiver_wallet._id), # Store wallet's MongoDB _id
             amount=Decimal(str(amount)),
-            transaction_type=TransactionType.TRANSFER,
+            transaction_type=TransactionType.PAYMENT.value, # Use PAYMENT for receiver
             description=f"Transfer from user {sender_id}"
         )
 
-        db.session.add_all([sender_transaction, receiver_transaction])
-        db.session.commit()
+        sender_transaction.save()
+        receiver_transaction.save()
         return sender_wallet, receiver_wallet, sender_transaction, receiver_transaction

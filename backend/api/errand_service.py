@@ -1,6 +1,8 @@
 
-from backend import db
-from backend.models import Errand, ErrandStatus, User, UserRole, CourierStatus
+
+from backend.models.errand import Errand, ErrandStatus
+from backend.models.user import User
+from backend.models.courier import Courier, CourierStatus
 from backend.errors import NotFoundError, ForbiddenError, BadRequestError, ConflictError
 
 class ErrandService:
@@ -12,26 +14,30 @@ class ErrandService:
         estimated_fee = data.get('estimated_fee')
 
         new_errand = Errand(
-            customer_id=customer_id,
+            customer_id=str(customer_id), # Store customer's MongoDB _id as string
             description=description,
             pickup_address=pickup_address,
             dropoff_address=dropoff_address,
             estimated_fee=estimated_fee
         )
-        db.session.add(new_errand)
-        db.session.commit()
+        new_errand.save()
         return new_errand
 
     @staticmethod
     def get_all_errands(current_user):
-        if current_user.role == UserRole.ADMIN:
-            errands = Errand.query.all()
-        elif current_user.role == UserRole.CUSTOMER:
-            errands = Errand.query.filter_by(customer_id=current_user.id).all()
-        elif current_user.role == UserRole.COURIER:
-            errands = Errand.query.filter(
-                (Errand.status == ErrandStatus.PENDING) | (Errand.courier_id == current_user.courier.id)
-            ).all()
+        if current_user.role == 'admin':
+            errands_data = Errand.errands_collection.find({})
+            errands = [Errand(**data) for data in errands_data]
+        elif current_user.role == 'customer':
+            errands = Errand.find_by_customer_id(str(current_user._id))
+        elif current_user.role == 'courier':
+            errands_data = Errand.errands_collection.find({
+                '$or': [
+                    {'status': ErrandStatus.PENDING.value},
+                    {'courier_id': str(current_user._id)}
+                ]
+            })
+            errands = [Errand(**data) for data in errands_data]
         else:
             raise ForbiddenError("Unauthorized")
         return errands

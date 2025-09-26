@@ -1,36 +1,67 @@
 # backend/models/errand.py
 
-from .. import db
-import enum
 from datetime import datetime
-from .base_model import BaseModel # Import BaseModel
+from bson.objectid import ObjectId
+from .base_model import BaseModel
+from .enums import ErrandStatus
 
-class ErrandStatus(enum.Enum):
-    PENDING = 'pending'
-    ACCEPTED = 'accepted'
-    IN_PROGRESS = 'in_progress'
-    COMPLETED = 'completed'
-    CANCELLED = 'cancelled'
-
-class Errand(db.Model, BaseModel): # Inherit from BaseModel
-    __tablename__ = 'errands'
-
-    id = db.Column(db.Integer, primary_key=True)
-    customer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    courier_id = db.Column(db.Integer, db.ForeignKey('couriers.id'), nullable=True)
+class Errand(BaseModel):
+    """Errand model for storing errand information."""
+    collection_name = 'errands'
     
-    description = db.Column(db.Text, nullable=False)
-    pickup_address = db.Column(db.String(255), nullable=False)
-    dropoff_address = db.Column(db.String(255), nullable=False)
-    estimated_fee = db.Column(db.Numeric(10, 2), nullable=False)
-    status = db.Column(db.Enum(ErrandStatus), nullable=False, default=ErrandStatus.PENDING)
+    @classmethod
+    def create_errand(cls, customer_id, description, pickup_address, dropoff_address, estimated_fee, **kwargs):
+        """Create a new errand."""
+        data = {
+            'customer_id': customer_id,
+            'description': description,
+            'pickup_address': pickup_address,
+            'dropoff_address': dropoff_address,
+            'estimated_fee': estimated_fee,
+            'courier_id': kwargs.get('courier_id'),
+            'status': kwargs.get('status', 'pending')
+        }
+        return cls.create(**data)
     
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
-    # Relationships
-    customer = db.relationship('User', back_populates='errands')
-    courier = db.relationship('Courier', back_populates='errands')
-
-    def __repr__(self):
-        return f'<Errand ID: {self.id} - Status: {self.status.value}>'
+    @classmethod
+    def find_by_customer_id(cls, customer_id):
+        """Find all errands for a specific customer."""
+        return cls.find({'customer_id': customer_id})
+    
+    @classmethod
+    def find_by_courier_id(cls, courier_id):
+        """Find all errands for a specific courier."""
+        return cls.find({'courier_id': courier_id})
+    
+    @classmethod
+    def update_status(cls, errand_id, status):
+        """Update errand status."""
+        if isinstance(errand_id, str):
+            errand_id = ObjectId(errand_id)
+        return cls.update(errand_id, {'status': status})
+    
+    @classmethod
+    def assign_courier(cls, errand_id, courier_id):
+        """Assign a courier to an errand."""
+        if isinstance(errand_id, str):
+            errand_id = ObjectId(errand_id)
+        return cls.update(errand_id, {'courier_id': courier_id})
+    
+    @staticmethod
+    def to_dict(errand_data):
+        """Convert errand document to dictionary format."""
+        if not errand_data:
+            return None
+            
+        return {
+            'id': str(errand_data['_id']),
+            'customer_id': errand_data['customer_id'],
+            'courier_id': errand_data.get('courier_id'),
+            'description': errand_data['description'],
+            'pickup_address': errand_data['pickup_address'],
+            'dropoff_address': errand_data['dropoff_address'],
+            'estimated_fee': float(errand_data['estimated_fee']),
+            'status': errand_data['status'],
+            'created_at': errand_data['created_at'].isoformat() if errand_data.get('created_at') else None,
+            'updated_at': errand_data['updated_at'].isoformat() if errand_data.get('updated_at') else None
+        }

@@ -1,7 +1,7 @@
 {
   "name": "Kwik Connect",
   "short_name": "Kwik",
-  "description": "Your hyper-local marketplace for connecting with local vendors and couriers.",
+  "description": "Affordable local delivery for shops and community couriers — multi-store orders, errands, and phone/WhatsApp ordering.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

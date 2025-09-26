@@ -55,3 +55,57 @@ img {
 .overflow-x-auto::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+/* Custom gradient backgrounds for hero sections */
+.hero-gradient {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+}
+
+/* Fade-in animation for cards and sections */
+.fade-in {
+  animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Custom button styles for homepage CTAs */
+.cta-btn {
+  box-shadow: 0 4px 14px 0 rgba(59,130,246,0.15);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.cta-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 24px 0 rgba(59,130,246,0.25);
+}
+
+/* Card grid spacing for feature/vendor sections */
+.card-grid {
+  gap: 2rem;
+}
+
+/* UberEats-like palette tweaks */
+:root {
+  --kc-accent: #11b981; /* green */
+  --kc-accent-dark: #0f9e6e;
+  --kc-muted: #6b7280;
+}
+
+/* Responsive container max widths */
+.kc-container {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .kc-container { padding-left: 1.5rem; padding-right: 1.5rem; }
+}
+
+@media (min-width: 1024px) {
+  .kc-container { padding-left: 2rem; padding-right: 2rem; }
+}

@@ -4,20 +4,35 @@ Token Blocklist Model
 This file defines the TokenBlocklist model, which is used to store revoked JWTs.
 """
 
-from backend import db
-from .base_model import BaseModel # Import BaseModel
+from datetime import datetime
+from bson.objectid import ObjectId
+from .base_model import BaseModel
 
-class TokenBlocklist(db.Model, BaseModel): # Inherit from BaseModel
-    """
-    TokenBlocklist model for storing revoked JWTs.
-    """
-    __tablename__ = 'token_blocklist'
-
-    id = db.Column(db.Integer, primary_key=True)
-    jti = db.Column(db.String(36), nullable=False, unique=True)
-    created_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
-
-    def __repr__(self):
-        return f'<TokenBlocklist {self.jti}>'
-
-    # Removed save_to_db as it is inherited from BaseModel
+class TokenBlocklist(BaseModel):
+    """TokenBlocklist model for storing revoked JWTs."""
+    
+    collection_name = 'token_blocklist'
+    
+    @classmethod
+    def create_blocklist_entry(cls, jti):
+        """Create a new token blocklist entry."""
+        return cls.create(
+            jti=jti,
+            created_at=datetime.utcnow()
+        )
+    
+    @classmethod
+    def find_by_jti(cls, jti):
+        """Find a token by JTI."""
+        return cls.find_one({'jti': jti})
+    
+    @staticmethod
+    def to_dict(token_data):
+        """Convert token document to dictionary format."""
+        if not token_data:
+            return None
+        return {
+            'id': str(token_data['_id']),
+            'jti': token_data['jti'],
+            'created_at': token_data['created_at'].isoformat() if token_data.get('created_at') else None
+        }

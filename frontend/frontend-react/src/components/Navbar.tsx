@@ -27,30 +27,7 @@ const Navbar: React.FC = () => {
           </svg>
         </button>
 
-        <div className="relative mx-4 lg:mx-0">
-          <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
-            <svg
-              className="h-5 w-5 text-gray-500"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </span>
-
-          <input
-            className="form-input w-32 sm:w-64 rounded-md pl-10 pr-4 focus:border-indigo-600"
-            type="text"
-            placeholder="Search"
-          />
-        </div>
+        {/* Search is provided by the global Header component; removed here to avoid duplicates. */}
       </div>
 
       <div className="flex items-center">
@@ -79,13 +56,13 @@ const Navbar: React.FC = () => {
             style={{ display: 'none' }}
           >
             <a
-              href="#"
+              href="/"
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white"
             >
               Messages
             </a>
             <a
-              href="#"
+              href="/"
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white"
             >
               Settings
@@ -109,13 +86,13 @@ const Navbar: React.FC = () => {
             style={{ display: 'none' }}
           >
             <a
-              href="#"
+              href="/"
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white"
             >
               Profile
             </a>
             <a
-              href="#"
+              href="/"
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white"
             >
               Settings

@@ -1,41 +1,74 @@
 # backend/models/order.py
 
-from .. import db
-import enum
 from datetime import datetime
-from .base_model import BaseModel # Import BaseModel
+from bson.objectid import ObjectId
+from .base_model import BaseModel
+from .enums import OrderStatus
 
-class OrderStatus(enum.Enum):
-    PENDING = 'pending'
-    ACCEPTED_BY_VENDOR = 'accepted_by_vendor'
-    READY_FOR_PICKUP = 'ready_for_pickup'
-    PICKED_UP = 'picked_up'
-    OUT_FOR_DELIVERY = 'out_for_delivery'
-    DELIVERED = 'delivered'
-    CANCELLED = 'cancelled'
-
-class Order(db.Model, BaseModel): # Inherit from BaseModel
-    __tablename__ = 'orders'
-
-    id = db.Column(db.Integer, primary_key=True)
-    customer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    vendor_id = db.Column(db.Integer, db.ForeignKey('vendors.id'), nullable=False)
-    courier_id = db.Column(db.Integer, db.ForeignKey('couriers.id'), nullable=True)
+class Order(BaseModel):
+    """Order model for storing order information."""
+    collection_name = 'orders'
     
-    total_amount = db.Column(db.Numeric(10, 2), nullable=False)
-    delivery_address = db.Column(db.String(255), nullable=False)
-    delivery_latitude = db.Column(db.Float, nullable=True)
-    delivery_longitude = db.Column(db.Float, nullable=True)
-    status = db.Column(db.Enum(OrderStatus), nullable=False, default=OrderStatus.PENDING)
+    @classmethod
+    def create_order(cls, customer_id, vendor_id, total_amount, delivery_address, **kwargs):
+        """Create a new order."""
+        data = {
+            'customer_id': customer_id,
+            'vendor_id': vendor_id,
+            'total_amount': total_amount,
+            'delivery_address': delivery_address,
+            'courier_id': kwargs.get('courier_id'),
+            'delivery_latitude': kwargs.get('delivery_latitude'),
+            'delivery_longitude': kwargs.get('delivery_longitude'),
+            'status': kwargs.get('status', 'pending')
+        }
+        return cls.create(**data)
     
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
-    # Relationships
-    customer = db.relationship('User', back_populates='orders', foreign_keys=[customer_id])
-    vendor = db.relationship('Vendor', back_populates='orders', foreign_keys=[vendor_id])
-    courier = db.relationship('Courier', back_populates='orders', foreign_keys=[courier_id])
-    items = db.relationship('OrderItem', back_populates='order', cascade="all, delete-orphan")
-
-    def __repr__(self):
-        return f'<Order ID: {self.id} - Status: {self.status.value}>'
+    @classmethod
+    def find_by_customer_id(cls, customer_id):
+        """Find all orders for a specific customer."""
+        return cls.find({'customer_id': customer_id})
+    
+    @classmethod
+    def find_by_vendor_id(cls, vendor_id):
+        """Find all orders for a specific vendor."""
+        return cls.find({'vendor_id': vendor_id})
+    
+    @classmethod
+    def find_by_courier_id(cls, courier_id):
+        """Find all orders for a specific courier."""
+        return cls.find({'courier_id': courier_id})
+    
+    @classmethod
+    def update_status(cls, order_id, status):
+        """Update order status."""
+        if isinstance(order_id, str):
+            order_id = ObjectId(order_id)
+        return cls.update(order_id, {'status': status})
+    
+    @classmethod
+    def assign_courier(cls, order_id, courier_id):
+        """Assign a courier to an order."""
+        if isinstance(order_id, str):
+            order_id = ObjectId(order_id)
+        return cls.update(order_id, {'courier_id': courier_id})
+    
+    @staticmethod
+    def to_dict(order_data):
+        """Convert order document to dictionary format."""
+        if not order_data:
+            return None
+            
+        return {
+            'id': str(order_data['_id']),
+            'customer_id': order_data['customer_id'],
+            'vendor_id': order_data['vendor_id'],
+            'courier_id': order_data.get('courier_id'),
+            'total_amount': float(order_data['total_amount']),
+            'delivery_address': order_data['delivery_address'],
+            'delivery_latitude': order_data.get('delivery_latitude'),
+            'delivery_longitude': order_data.get('delivery_longitude'),
+            'status': order_data['status'],
+            'created_at': order_data['created_at'].isoformat() if order_data.get('created_at') else None,
+            'updated_at': order_data['updated_at'].isoformat() if order_data.get('updated_at') else None
+        }

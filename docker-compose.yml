@@ -30,5 +30,19 @@ services:
     ports:
       - "5432:5432"
 
+  # MongoDB Service
+  mongodb:
+    image: mongo:6.0
+    container_name: kwik_connect_mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongo_user
+      MONGO_INITDB_ROOT_PASSWORD: mongo_pass
+    volumes:
+      - mongo_data:/data/db
+
 volumes:
   postgres_data:
+  mongo_data:

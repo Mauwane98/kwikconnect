@@ -1,11 +1,10 @@
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from backend.errors import BadRequestError, NotFoundError, ForbiddenError, ConflictError
 from backend.schemas.errand import ErrandSchema, ErrandUpdateStatusSchema
 from .errand_service import ErrandService
 from .decorators import customer_required, courier_required
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from backend.models import User
 
 errands_bp = Blueprint('errands_api', __name__, url_prefix='/api/v1/errands')
 
@@ -34,6 +33,7 @@ def get_all_errands():
     Retrieves all errands. Accessible by admins, or filtered for customers/couriers.
     """
     current_user_id = get_jwt_identity()
+    User = current_app.models['User']
     current_user = User.find_by_id(current_user_id)
     errands = ErrandService.get_all_errands(current_user)
     return jsonify(ErrandSchema(many=True).dump(errands)), 200
@@ -45,6 +45,7 @@ def get_errand_details(errand_id):
     Retrieves details of a specific errand.
     """
     current_user_id = get_jwt_identity()
+    User = current_app.models['User']
     current_user = User.find_by_id(current_user_id)
     errand = ErrandService.get_errand_details(current_user, errand_id)
     return jsonify(ErrandSchema().dump(errand)), 200

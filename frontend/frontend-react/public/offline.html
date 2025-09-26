@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KwikConnect - Currently Offline</title>
+    <link href="/static/css/main.css" rel="stylesheet">
+    <style>
+        .offline-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            text-align: center;
+            background-color: #f3f4f6;
+        }
+        .offline-icon {
+            font-size: 64px;
+            margin-bottom: 1rem;
+        }
+        .cached-data {
+            margin-top: 2rem;
+            width: 100%;
+            max-width: 600px;
+        }
+        .action-button {
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            margin-top: 1rem;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .action-button:hover {
+            background-color: #2563eb;
+        }
+        .status-message {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">📡</div>
+        <h1 class="text-3xl font-bold mb-4">You're Currently Offline</h1>
+        <p class="text-gray-600 mb-6">Don't worry! You can still:</p>
+        
+        <div class="cached-data">
+            <div class="status-message" id="orderStatus">
+                <h2 class="text-xl font-semibold mb-2">Your Orders</h2>
+                <p>Any orders you place while offline will be sent automatically when you're back online.</p>
+            </div>
+
+            <div class="status-message mt-4" id="vendorStatus">
+                <h2 class="text-xl font-semibold mb-2">Available Vendors</h2>
+                <p>You can view previously loaded vendors and their menus.</p>
+            </div>
+
+            <div class="status-message mt-4">
+                <h2 class="text-xl font-semibold mb-2">Need Help?</h2>
+                <p>You can still place orders via:</p>
+                <ul class="mt-2 space-y-2">
+                    <li>📱 WhatsApp: <strong id="whatsappNumber">Loading...</strong></li>
+                    <li>✉️ SMS: <strong id="smsNumber">Loading...</strong></li>
+                    <li>📞 Phone: <strong id="phoneNumber">Loading...</strong></li>
+                </ul>
+            </div>
+        </div>
+
+        <button onclick="retryConnection()" class="action-button mt-6">
+            Try Reconnecting
+        </button>
+
+        <p class="text-sm text-gray-500 mt-4">
+            KwikConnect - Keeping your kasi connected, even offline!
+        </p>
+    </div>
+
+    <script>
+        // Load contact numbers from IndexedDB
+        async function loadContactNumbers() {
+            try {
+                const db = await openDB();
+                const tx = db.transaction('orderChannels', 'readonly');
+                const store = tx.objectStore('orderChannels');
+                const channels = await store.getAll();
+
+                channels.forEach(channel => {
+                    if (channel.channel_type === 'whatsapp') {
+                        document.getElementById('whatsappNumber').textContent = channel.phone_number;
+                    } else if (channel.channel_type === 'sms') {
+                        document.getElementById('smsNumber').textContent = channel.phone_number;
+                    } else if (channel.channel_type === 'phone') {
+                        document.getElementById('phoneNumber').textContent = channel.phone_number;
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading contact numbers:', error);
+            }
+        }
+
+        // Try to reconnect
+        function retryConnection() {
+            const button = event.target;
+            button.textContent = 'Checking connection...';
+            button.disabled = true;
+
+            fetch('/api/health-check')
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        throw new Error('Still offline');
+                    }
+                })
+                .catch(() => {
+                    button.textContent = 'Try Reconnecting';
+                    button.disabled = false;
+                    showToast('Still offline. Please try again later.');
+                });
+        }
+
+        // Show toast message
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #374151;
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 0.5rem;
+                animation: fadeIn 0.3s, fadeOut 0.3s 2.7s;
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // Initialize
+        loadContactNumbers();
+    </script>
+</body>
+</html>
